@@ -192,7 +192,11 @@ function handleTouchEnd(e) {
     const touch = e.changedTouches[0];
     const element = document.elementFromPoint(touch.clientX, touch.clientY);
     
-    if (element && element.classList.contains('grid-slot')) {
+    if (draggedFromSlot && (!element || !element.classList.contains('grid-slot'))) {
+        draggedFromSlot.innerHTML = '';
+        updateWordGroups();
+        checkWord();
+    } else if (element && element.classList.contains('grid-slot')) {
         const row = element.closest('.row');
         const isFirstRow = row && row.dataset.row === '0';
         
@@ -241,8 +245,8 @@ function createGhost(x, y, letter) {
     ghostElement.style.left = x + 'px';
     ghostElement.style.top = y + 'px';
     if (letter.length > 1) {
-        ghostElement.style.width = '100px';
-        ghostElement.style.fontSize = '1.5rem';
+        ghostElement.style.width = '50px';
+        ghostElement.style.fontSize = '0.75rem';
     }
     document.body.appendChild(ghostElement);
 }
@@ -320,12 +324,28 @@ function placeLetter(gridSlot, letter) {
     slot.textContent = letter;
     slot.dataset.letter = letter;
     
-    slot.addEventListener('click', () => {
-        if (clickModeEnabled) {
+    slot.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        draggedLetter = letter;
+        draggedFromSlot = gridSlot;
+        const touch = e.touches[0];
+        createGhost(touch.clientX, touch.clientY, letter);
+    }, { passive: false });
+    
+    slot.addEventListener('touchmove', handleTouchMove, { passive: false });
+    slot.addEventListener('touchend', handleTouchEnd);
+    
+    slot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (clickModeEnabled && selectedSlot) {
             handleLetterClick(letter, gridSlot);
         } else {
             const word = getWordAtSlot(gridSlot);
+            const wordSlots = getWordSlots(gridSlot);
+            highlightWordSlots(wordSlots, true);
             playSound(word.length > 1 ? word : letter);
+            setTimeout(() => highlightWordSlots(wordSlots, false), 500);
         }
     });
     
@@ -392,6 +412,41 @@ function getWordAtSlot(slot) {
     }
     
     return word;
+}
+
+function getWordSlots(slot) {
+    const row = slot.parentElement;
+    const slots = Array.from(row.querySelectorAll('.grid-slot'));
+    const slotIndex = slots.indexOf(slot);
+    
+    let startIdx = slotIndex;
+    while (startIdx > 0 && slots[startIdx - 1].querySelector('.slot')) {
+        startIdx--;
+    }
+    
+    let endIdx = slotIndex;
+    while (endIdx < slots.length - 1 && slots[endIdx + 1].querySelector('.slot')) {
+        endIdx++;
+    }
+    
+    const result = [];
+    for (let i = startIdx; i <= endIdx; i++) {
+        result.push(slots[i]);
+    }
+    return result;
+}
+
+function highlightWordSlots(slots, highlight) {
+    slots.forEach(slot => {
+        const slotEl = slot.querySelector('.slot');
+        if (slotEl) {
+            if (highlight) {
+                slotEl.classList.add('word-hover');
+            } else {
+                slotEl.classList.remove('word-hover');
+            }
+        }
+    });
 }
 
 function updateWordGroups() {
