@@ -2,7 +2,7 @@
     "name": "Laras Wortzauber",
     "short_name": "Wortzauber",
     "description": "Eine Lern-App für Kinder zum Üben von Buchstaben und Wörtern",
-    "start_url": "/index.html",
+    "start_url": ".",
     "display": "standalone",
     "background_color": "#5f27cd",
     "theme_color": "#5f27cd",
