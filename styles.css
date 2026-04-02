@@ -221,6 +221,54 @@ body {
     to { transform: translateY(-2vh); }
 }
 
+.completion-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: linear-gradient(135deg, #54a0ff, #5f27cd);
+    padding: 4vh 3vh;
+    border-radius: 4vh;
+    box-shadow: 0 2vh 8vh rgba(0, 0, 0, 0.5);
+    z-index: 3000;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    gap: 1.5vh;
+    align-items: center;
+}
+
+.completion-message.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.completion-img {
+    height: 8vh;
+    width: auto;
+    animation: bounceSequence 0.5s ease infinite alternate;
+}
+
+.completion-img:nth-child(1) { animation-delay: 0s; }
+.completion-img:nth-child(2) { animation-delay: 0.1s; }
+.completion-img:nth-child(3) { animation-delay: 0.2s; }
+.completion-img:nth-child(4) { animation-delay: 0.3s; }
+.completion-img:nth-child(5) { animation-delay: 0.4s; }
+.completion-img:nth-child(6) { animation-delay: 0.5s; }
+
+@keyframes bounceSequence {
+    from { transform: translateY(0); }
+    to { transform: translateY(-2vh); }
+}
+
+.flying-image {
+    position: fixed;
+    z-index: 5000;
+    pointer-events: none;
+    object-fit: contain;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
 .template-letter {
     cursor: pointer !important;
 }

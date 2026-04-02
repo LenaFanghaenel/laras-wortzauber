@@ -866,21 +866,18 @@ function showSuccess() {
     
     let randomImage = images[Math.floor(Math.random() * images.length)];
     
-    if (!collectedImages.includes(randomImage)) {
-        collectedImages.push(randomImage);
-        successCountSinceLastNew = 0;
-        updateCollectionBar();
+    const successImage = document.getElementById('success-image');
+    successImage.src = randomImage;
+    
+    const msg = document.getElementById('success-message');
+    msg.classList.add('show');
+    
+    const closeMsg = () => {
+        if (!msg.classList.contains('show')) return;
+        msg.classList.remove('show');
         
-        if (collectedImages.length === 6) {
-            setTimeout(() => showFireworks(), 500);
-        }
-    } else {
-        successCountSinceLastNew++;
-        
-        if (successCountSinceLastNew >= 6 && collectedImages.length < 6) {
-            const uncollectedImages = images.filter(img => !collectedImages.includes(img));
-            if (uncollectedImages.length > 0) {
-                randomImage = uncollectedImages[Math.floor(Math.random() * uncollectedImages.length)];
+        if (!collectedImages.includes(randomImage)) {
+            animateImageToCollection(randomImage, () => {
                 collectedImages.push(randomImage);
                 successCountSinceLastNew = 0;
                 updateCollectionBar();
@@ -888,23 +885,80 @@ function showSuccess() {
                 if (collectedImages.length === 6) {
                     setTimeout(() => showFireworks(), 500);
                 }
+            });
+        } else {
+            successCountSinceLastNew++;
+            
+            if (successCountSinceLastNew >= 6 && collectedImages.length < 6) {
+                const uncollectedImages = images.filter(img => !collectedImages.includes(img));
+                if (uncollectedImages.length > 0) {
+                    const guaranteedNew = uncollectedImages[Math.floor(Math.random() * uncollectedImages.length)];
+                    animateImageToCollection(guaranteedNew, () => {
+                        collectedImages.push(guaranteedNew);
+                        successCountSinceLastNew = 0;
+                        updateCollectionBar();
+                        
+                        if (collectedImages.length === 6) {
+                            setTimeout(() => showFireworks(), 500);
+                        }
+                    });
+                }
             }
         }
-    }
-    
-    const successImage = document.getElementById('success-image');
-    successImage.src = randomImage;
-    
-    const msg = document.getElementById('success-message');
-    msg.classList.add('show');
-    msg.onclick = () => {
-        msg.classList.remove('show');
+        
         document.querySelectorAll('.setzkasten .grid-slot').forEach(slot => {
             slot.innerHTML = '';
             slot.classList.remove('word-start', 'word-middle', 'word-end');
         });
         nextWord();
     };
+    
+    msg.onclick = closeMsg;
+    msg.ontouchend = (e) => {
+        e.preventDefault();
+        closeMsg();
+    };
+}
+
+function animateImageToCollection(imageSrc, callback) {
+    const successImage = document.getElementById('success-image');
+    const collectionSlots = document.querySelectorAll('.collection-slot');
+    
+    const targetIndex = collectedImages.length;
+    if (targetIndex >= 6) {
+        if (callback) callback();
+        return;
+    }
+    
+    const targetSlot = collectionSlots[targetIndex];
+    if (!targetSlot) {
+        if (callback) callback();
+        return;
+    }
+    
+    const startRect = successImage.getBoundingClientRect();
+    const endRect = targetSlot.getBoundingClientRect();
+    
+    const flyingImage = document.createElement('img');
+    flyingImage.src = imageSrc;
+    flyingImage.className = 'flying-image';
+    flyingImage.style.left = startRect.left + 'px';
+    flyingImage.style.top = startRect.top + 'px';
+    flyingImage.style.width = startRect.width + 'px';
+    flyingImage.style.height = startRect.height + 'px';
+    document.body.appendChild(flyingImage);
+    
+    requestAnimationFrame(() => {
+        flyingImage.style.left = endRect.left + 'px';
+        flyingImage.style.top = endRect.top + 'px';
+        flyingImage.style.width = '6vh';
+        flyingImage.style.height = '6vh';
+    });
+    
+    setTimeout(() => {
+        flyingImage.remove();
+        if (callback) callback();
+    }, 500);
 }
 
 function updateCollectionBar() {
@@ -943,7 +997,11 @@ function showFireworks() {
         }, i * 100);
     }
     
-    setTimeout(() => {
+    const completionMsg = document.getElementById('completion-message');
+    completionMsg.classList.add('show');
+    
+    completionMsg.onclick = () => {
+        completionMsg.classList.remove('show');
         fireworksContainer.classList.remove('active');
         collectedImages = [];
         successCountSinceLastNew = 0;
@@ -951,7 +1009,7 @@ function showFireworks() {
             slot.innerHTML = '?';
             slot.classList.remove('filled');
         });
-    }, 6000);
+    };
 }
 
 function toggleClickMode() {
