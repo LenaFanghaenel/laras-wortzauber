@@ -12,6 +12,8 @@ let ghostElement = null;
 let selectedSlot = null;
 let touchStartPos = null;
 let isDragging = false;
+let collectedImages = [];
+let successCountSinceLastNew = 0;
 
 function init() {
     initBackground();
@@ -791,12 +793,15 @@ function setMode(mode) {
     });
     
     const firstRow = document.querySelector('.setzkasten .row[data-row="0"]');
+    const collectionSlots = document.querySelector('.collection-slots');
     
     if (mode === 'copy') {
         firstRow.classList.add('template-row');
+        if (collectionSlots) collectionSlots.classList.add('visible');
         nextWord();
     } else {
         firstRow.classList.remove('template-row');
+        if (collectionSlots) collectionSlots.classList.remove('visible');
         currentWord = '';
     }
 }
@@ -857,6 +862,39 @@ function checkWord() {
 function showSuccess() {
     playSound(currentWord);
     
+    const images = ['Buch.png', 'Eule.png', 'Mond.png', 'Stern.png', 'Flasche.png', 'Zauberstab.png'];
+    
+    let randomImage = images[Math.floor(Math.random() * images.length)];
+    
+    if (!collectedImages.includes(randomImage)) {
+        collectedImages.push(randomImage);
+        successCountSinceLastNew = 0;
+        updateCollectionBar();
+        
+        if (collectedImages.length === 6) {
+            setTimeout(() => showFireworks(), 500);
+        }
+    } else {
+        successCountSinceLastNew++;
+        
+        if (successCountSinceLastNew >= 6 && collectedImages.length < 6) {
+            const uncollectedImages = images.filter(img => !collectedImages.includes(img));
+            if (uncollectedImages.length > 0) {
+                randomImage = uncollectedImages[Math.floor(Math.random() * uncollectedImages.length)];
+                collectedImages.push(randomImage);
+                successCountSinceLastNew = 0;
+                updateCollectionBar();
+                
+                if (collectedImages.length === 6) {
+                    setTimeout(() => showFireworks(), 500);
+                }
+            }
+        }
+    }
+    
+    const successImage = document.getElementById('success-image');
+    successImage.src = randomImage;
+    
     const msg = document.getElementById('success-message');
     msg.classList.add('show');
     msg.onclick = () => {
@@ -867,6 +905,53 @@ function showSuccess() {
         });
         nextWord();
     };
+}
+
+function updateCollectionBar() {
+    const slots = document.querySelectorAll('.collection-slot');
+    const images = ['Buch.png', 'Eule.png', 'Mond.png', 'Stern.png', 'Flasche.png', 'Zauberstab.png'];
+    
+    slots.forEach((slot, index) => {
+        if (index < collectedImages.length) {
+            const img = document.createElement('img');
+            img.src = collectedImages[index];
+            img.alt = collectedImages[index].replace('.png', '');
+            slot.innerHTML = '';
+            slot.appendChild(img);
+            slot.classList.add('filled');
+        }
+    });
+}
+
+function showFireworks() {
+    const fireworksContainer = document.getElementById('fireworks');
+    fireworksContainer.classList.add('active');
+    
+    const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#00d2d3', '#ff9f43'];
+    
+    for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = Math.random() * 100 + '%';
+            firework.style.top = Math.random() * 100 + '%';
+            firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+            firework.style.boxShadow = `0 0 2vh ${firework.style.background}`;
+            fireworksContainer.appendChild(firework);
+            
+            setTimeout(() => firework.remove(), 1000);
+        }, i * 100);
+    }
+    
+    setTimeout(() => {
+        fireworksContainer.classList.remove('active');
+        collectedImages = [];
+        successCountSinceLastNew = 0;
+        document.querySelectorAll('.collection-slot').forEach(slot => {
+            slot.innerHTML = '?';
+            slot.classList.remove('filled');
+        });
+    }, 6000);
 }
 
 function toggleClickMode() {

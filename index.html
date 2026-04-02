@@ -20,15 +20,14 @@
     <!-- Standard Favicon -->
     <link rel="icon" type="image/png" href="icon_192.png">
     
-    <link rel="stylesheet" href="styles.css?v=31">
+    <link rel="stylesheet" href="styles.css?v=38">
 </head>
 <body>
     <canvas id="background"></canvas>
     <div id="stars"></div>
+    <div id="fireworks"></div>
     
     <div class="app-container">
-        <img src="Zauberstab.png" class="background-image left-bg-image" alt="Zauberstab">
-        <img src="Buch.png" class="background-image right-bg-image" alt="Buch">
         <div class="header-container">
             <div class="header-content">
                 <h1 class="title">Laras Wortzauber</h1>
@@ -40,76 +39,86 @@
         </div>
         
         <div class="success-message" id="success-message">
-            <span class="success-icon">⭐</span>
-            Super gemacht!
-            <span class="success-icon">⭐</span>
+            <img class="success-image" id="success-image" src="Stern.png" alt="">
+            <span class="success-text">Super gemacht!</span>
         </div>
         
-        <div class="main-content">
-            <div class="setzkasten-wrapper">
-                <div class="setzkasten" id="setzkasten">
-                    <div class="row" data-row="0">
-                        <div class="grid-slot" data-col="0"></div>
-                        <div class="grid-slot" data-col="1"></div>
-                        <div class="grid-slot" data-col="2"></div>
-                        <div class="grid-slot" data-col="3"></div>
-                        <div class="grid-slot" data-col="4"></div>
-                        <div class="grid-slot" data-col="5"></div>
-                        <div class="grid-slot" data-col="6"></div>
-                        <div class="grid-slot" data-col="7"></div>
-                        <div class="grid-slot" data-col="8"></div>
-                        <div class="grid-slot" data-col="9"></div>
+        <div class="game-area">
+            <div class="collection-slots">
+                <div class="collection-slot" data-index="0">?</div>
+                <div class="collection-slot" data-index="1">?</div>
+                <div class="collection-slot" data-index="2">?</div>
+                <div class="collection-slot" data-index="3">?</div>
+                <div class="collection-slot" data-index="4">?</div>
+                <div class="collection-slot" data-index="5">?</div>
+            </div>
+            
+            <div class="game-content">
+                <div class="setzkasten-wrapper">
+                    <div class="setzkasten" id="setzkasten">
+                        <div class="row" data-row="0">
+                            <div class="grid-slot" data-col="0"></div>
+                            <div class="grid-slot" data-col="1"></div>
+                            <div class="grid-slot" data-col="2"></div>
+                            <div class="grid-slot" data-col="3"></div>
+                            <div class="grid-slot" data-col="4"></div>
+                            <div class="grid-slot" data-col="5"></div>
+                            <div class="grid-slot" data-col="6"></div>
+                            <div class="grid-slot" data-col="7"></div>
+                            <div class="grid-slot" data-col="8"></div>
+                            <div class="grid-slot" data-col="9"></div>
+                        </div>
+                        <div class="row" data-row="1">
+                            <div class="grid-slot" data-col="0"></div>
+                            <div class="grid-slot" data-col="1"></div>
+                            <div class="grid-slot" data-col="2"></div>
+                            <div class="grid-slot" data-col="3"></div>
+                            <div class="grid-slot" data-col="4"></div>
+                            <div class="grid-slot" data-col="5"></div>
+                            <div class="grid-slot" data-col="6"></div>
+                            <div class="grid-slot" data-col="7"></div>
+                            <div class="grid-slot" data-col="8"></div>
+                            <div class="grid-slot" data-col="9"></div>
+                        </div>
+                        <div class="row" data-row="2">
+                            <div class="grid-slot" data-col="0"></div>
+                            <div class="grid-slot" data-col="1"></div>
+                            <div class="grid-slot" data-col="2"></div>
+                            <div class="grid-slot" data-col="3"></div>
+                            <div class="grid-slot" data-col="4"></div>
+                            <div class="grid-slot" data-col="5"></div>
+                            <div class="grid-slot" data-col="6"></div>
+                            <div class="grid-slot" data-col="7"></div>
+                            <div class="grid-slot" data-col="8"></div>
+                            <div class="grid-slot" data-col="9"></div>
+                        </div>
                     </div>
-                    <div class="row" data-row="1">
-                        <div class="grid-slot" data-col="0"></div>
-                        <div class="grid-slot" data-col="1"></div>
-                        <div class="grid-slot" data-col="2"></div>
-                        <div class="grid-slot" data-col="3"></div>
-                        <div class="grid-slot" data-col="4"></div>
-                        <div class="grid-slot" data-col="5"></div>
-                        <div class="grid-slot" data-col="6"></div>
-                        <div class="grid-slot" data-col="7"></div>
-                        <div class="grid-slot" data-col="8"></div>
-                        <div class="grid-slot" data-col="9"></div>
+                    <button class="icon-btn reset-btn" onclick="resetSetzkasten()" title="Zurücksetzen">🔄</button>
+                </div>
+                
+                <div class="keyboard-wrapper">
+                    <div class="kacheln-container">
+                        <div class="kacheln" id="kacheln"></div>
+                        <div class="kacheln multiletter-row" id="multiletter-row">
+                            <div class="keyboard-row">
+                                <div class="kachel consonant multiletter" data-letters="SCH">SCH</div>
+                                <div class="kachel consonant multiletter" data-letters="CH">CH</div>
+                                <div class="kachel vowel multiletter" data-letters="EI">EI</div>
+                                <div class="kachel vowel multiletter" data-letters="AU">AU</div>
+                                <div class="kachel vowel multiletter" data-letters="EU">EU</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="row" data-row="2">
-                        <div class="grid-slot" data-col="0"></div>
-                        <div class="grid-slot" data-col="1"></div>
-                        <div class="grid-slot" data-col="2"></div>
-                        <div class="grid-slot" data-col="3"></div>
-                        <div class="grid-slot" data-col="4"></div>
-                        <div class="grid-slot" data-col="5"></div>
-                        <div class="grid-slot" data-col="6"></div>
-                        <div class="grid-slot" data-col="7"></div>
-                        <div class="grid-slot" data-col="8"></div>
-                        <div class="grid-slot" data-col="9"></div>
+                    <div class="keyboard-side-btns">
+                        <button class="icon-btn toggle-multiletter-btn" id="toggle-multiletter-btn" onclick="toggleMultiletterRow()" title="Mehrfachlaute">🔤</button>
+                        <button class="icon-btn click-toggle-btn" id="click-toggle-btn" onclick="toggleClickMode()" title="Klicken & Platzieren">👆</button>
                     </div>
                 </div>
-                <button class="icon-btn reset-btn" onclick="resetSetzkasten()" title="Zurücksetzen">🔄</button>
-            </div>
-        </div>
-        
-        <div class="keyboard-wrapper">
-            <div class="kacheln-container">
-                <div class="kacheln" id="kacheln"></div>
-                <div class="kacheln multiletter-row" id="multiletter-row">
-                    <div class="keyboard-row">
-                        <div class="kachel consonant multiletter" data-letters="SCH">SCH</div>
-                        <div class="kachel consonant multiletter" data-letters="CH">CH</div>
-                        <div class="kachel vowel multiletter" data-letters="EI">EI</div>
-                        <div class="kachel vowel multiletter" data-letters="AU">AU</div>
-                        <div class="kachel vowel multiletter" data-letters="EU">EU</div>
-                    </div>
-                </div>
-            </div>
-            <div class="keyboard-side-btns">
-                <button class="icon-btn toggle-multiletter-btn" id="toggle-multiletter-btn" onclick="toggleMultiletterRow()" title="Mehrfachlaute">🔤</button>
-                <button class="icon-btn click-toggle-btn" id="click-toggle-btn" onclick="toggleClickMode()" title="Klicken & Platzieren">👆</button>
             </div>
         </div>
     </div>
 
-    <script src="app-ipad.js?v=10"></script>
+    <script src="app-ipad.js?v=14"></script>
     <script>
         // Service Worker registrieren
         if ('serviceWorker' in navigator) {
