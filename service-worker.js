@@ -1,4 +1,4 @@
-const CACHE_NAME = 'laras-wortzauber-v5';
+const CACHE_NAME = 'laras-wortzauber-v6';
 const ASSETS = [
     '/',
     '/index.html',

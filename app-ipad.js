@@ -577,10 +577,10 @@ function placeMultiletter(gridSlot, letters) {
     checkWord();
 }
 
-function getWordAtSlot(slot) {
-    const row = slot.parentElement;
+function getWordAtSlot(gridSlot) {
+    const row = gridSlot.closest('.row');
     const slots = Array.from(row.querySelectorAll('.grid-slot'));
-    const slotIndex = slots.indexOf(slot);
+    const slotIndex = slots.indexOf(gridSlot);
     
     let word = '';
     let startIdx = slotIndex;
@@ -596,10 +596,10 @@ function getWordAtSlot(slot) {
     return word;
 }
 
-function getWordSlots(slot) {
-    const row = slot.parentElement;
+function getWordSlots(gridSlot) {
+    const row = gridSlot.closest('.row');
     const slots = Array.from(row.querySelectorAll('.grid-slot'));
-    const slotIndex = slots.indexOf(slot);
+    const slotIndex = slots.indexOf(gridSlot);
     
     let startIdx = slotIndex;
     while (startIdx > 0 && slots[startIdx - 1].querySelector('.slot')) {
@@ -619,8 +619,8 @@ function getWordSlots(slot) {
 }
 
 function highlightWordSlots(slots, highlight) {
-    slots.forEach(slot => {
-        const slotEl = slot.querySelector('.slot');
+    slots.forEach(gridSlot => {
+        const slotEl = gridSlot.querySelector('.slot');
         if (slotEl) {
             if (highlight) {
                 slotEl.classList.add('word-hover');
