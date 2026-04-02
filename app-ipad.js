@@ -524,7 +524,7 @@ function placeLetter(gridSlot, letter) {
             handleLetterClick(letter, gridSlot);
         } else {
             const word = getWordAtSlot(gridSlot);
-            const wordSlots = getWordSlots(slot);
+            const wordSlots = getWordSlotsFromGridSlot(gridSlot);
             highlightWordSlots(wordSlots, true);
             playSound(word.length > 1 ? word : letter);
             setTimeout(() => highlightWordSlots(wordSlots, false), 500);
@@ -598,11 +598,47 @@ function getWordAtSlot(gridSlot) {
 
 function getWordSlots(slotElement) {
     const gridSlot = slotElement.closest('.grid-slot');
-    if (!gridSlot) return [slotElement.parentElement];
+    if (!gridSlot) {
+        const parent = slotElement.parentElement;
+        if (parent && parent.classList.contains('grid-slot')) {
+            return [parent];
+        }
+        return [];
+    }
     
     const row = gridSlot.closest('.row');
+    if (!row) return [gridSlot];
+    
     const slots = Array.from(row.querySelectorAll('.grid-slot'));
     const slotIndex = slots.indexOf(gridSlot);
+    
+    if (slotIndex === -1) return [gridSlot];
+    
+    let startIdx = slotIndex;
+    while (startIdx > 0 && slots[startIdx - 1].querySelector('.slot')) {
+        startIdx--;
+    }
+    
+    let endIdx = slotIndex;
+    while (endIdx < slots.length - 1 && slots[endIdx + 1].querySelector('.slot')) {
+        endIdx++;
+    }
+    
+    const result = [];
+    for (let i = startIdx; i <= endIdx; i++) {
+        result.push(slots[i]);
+    }
+    return result;
+}
+
+function getWordSlotsFromGridSlot(gridSlot) {
+    const row = gridSlot.closest('.row');
+    if (!row) return [gridSlot];
+    
+    const slots = Array.from(row.querySelectorAll('.grid-slot'));
+    const slotIndex = slots.indexOf(gridSlot);
+    
+    if (slotIndex === -1) return [gridSlot];
     
     let startIdx = slotIndex;
     while (startIdx > 0 && slots[startIdx - 1].querySelector('.slot')) {
@@ -712,8 +748,33 @@ function playSound(text) {
         utterance.rate = 1.0;
         utterance.pitch = 1.1;
         
+        const voices = speechSynthesis.getVoices();
+        const germanVoices = voices.filter(v => v.lang.startsWith('de'));
+        
+        if (germanVoices.length > 0) {
+            const preferredVoice = germanVoices.find(v => 
+                v.name.includes('Anna') || 
+                v.name.includes('Markus') || 
+                v.name.includes('German') ||
+                v.name.includes('Deutsch')
+            );
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            } else {
+                utterance.voice = germanVoices[0];
+            }
+        }
+        
         speechSynthesis.speak(utterance);
     }
+}
+
+if ('speechSynthesis' in window) {
+    speechSynthesis.onvoiceschanged = () => {
+        const voices = speechSynthesis.getVoices();
+        const germanVoices = voices.filter(v => v.lang.startsWith('de'));
+        console.log('Verfügbare deutsche Stimmen:', germanVoices.map(v => v.name));
+    };
 }
 
 function setMode(mode) {
