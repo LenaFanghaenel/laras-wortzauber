@@ -10,6 +10,8 @@ let draggedLetter = null;
 let draggedFromSlot = null;
 let ghostElement = null;
 let selectedSlot = null;
+let touchStartPos = null;
+let isDragging = false;
 
 function init() {
     initBackground();
@@ -114,10 +116,76 @@ function initKacheln() {
             kachel.textContent = letter;
             kachel.dataset.letter = letter;
             
-            kachel.addEventListener('touchstart', handleTouchStart, { passive: false });
-            kachel.addEventListener('touchmove', handleTouchMove, { passive: false });
-            kachel.addEventListener('touchend', handleTouchEnd);
-            kachel.addEventListener('click', handleKachelClick);
+            kachel.addEventListener('touchstart', (e) => {
+                touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                isDragging = false;
+                draggedLetter = letter;
+                draggedFromSlot = null;
+            }, { passive: true });
+            
+            kachel.addEventListener('touchmove', (e) => {
+                if (!touchStartPos) return;
+                
+                const touch = e.touches[0];
+                const dx = touch.clientX - touchStartPos.x;
+                const dy = touch.clientY - touchStartPos.y;
+                
+                if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+                    if (!isDragging) {
+                        isDragging = true;
+                        createGhost(touch.clientX, touch.clientY, letter);
+                    } else {
+                        moveGhost(touch.clientX, touch.clientY);
+                    }
+                    
+                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                    if (element && element.classList.contains('grid-slot')) {
+                        element.classList.add('drop-zone-active');
+                    }
+                    
+                    document.querySelectorAll('.grid-slot').forEach(s => {
+                        if (s !== element) {
+                            s.classList.remove('drop-zone-active');
+                        }
+                    });
+                }
+            }, { passive: true });
+            
+            kachel.addEventListener('touchend', (e) => {
+                if (isDragging) {
+                    const touch = e.changedTouches[0];
+                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                    
+                    if (element && element.classList.contains('grid-slot')) {
+                        const row = element.closest('.row');
+                        const isFirstRow = row && row.dataset.row === '0';
+                        
+                        if (!(currentMode === 'copy' && isFirstRow) && !element.hasChildNodes()) {
+                            placeLetter(element, draggedLetter);
+                        }
+                    }
+                    
+                    removeGhost();
+                    document.querySelectorAll('.grid-slot').forEach(s => {
+                        s.classList.remove('drop-zone-active');
+                    });
+                }
+                
+                touchStartPos = null;
+                isDragging = false;
+                draggedLetter = null;
+                draggedFromSlot = null;
+            });
+            
+            kachel.addEventListener('click', (e) => {
+                if (isDragging) return;
+                
+                if (clickModeEnabled && selectedSlot) {
+                    handleLetterClick(letter, null);
+                } else {
+                    playSound(letter);
+                }
+            });
             
             rowDiv.appendChild(kachel);
         });
@@ -133,22 +201,77 @@ function initMultiletterKacheln() {
         const letters = kachel.dataset.letters;
         
         kachel.addEventListener('touchstart', (e) => {
-            e.preventDefault();
+            touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            isDragging = false;
             draggedLetter = letters;
             draggedFromSlot = null;
-            createGhost(e.touches[0].clientX, e.touches[0].clientY, letters);
-        }, { passive: false });
+        }, { passive: true });
         
-        kachel.addEventListener('touchmove', handleTouchMove, { passive: false });
-        kachel.addEventListener('touchend', handleTouchEnd);
+        kachel.addEventListener('touchmove', (e) => {
+            if (!touchStartPos) return;
+            
+            const touch = e.touches[0];
+            const dx = touch.clientX - touchStartPos.x;
+            const dy = touch.clientY - touchStartPos.y;
+            
+            if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+                if (!isDragging) {
+                    isDragging = true;
+                    createGhost(touch.clientX, touch.clientY, letters);
+                } else {
+                    moveGhost(touch.clientX, touch.clientY);
+                }
+                
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (element && element.classList.contains('grid-slot')) {
+                    element.classList.add('drop-zone-active');
+                }
+                
+                document.querySelectorAll('.grid-slot').forEach(s => {
+                    if (s !== element) {
+                        s.classList.remove('drop-zone-active');
+                    }
+                });
+            }
+        }, { passive: true });
+        
+        kachel.addEventListener('touchend', (e) => {
+            if (isDragging) {
+                const touch = e.changedTouches[0];
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                
+                if (element && element.classList.contains('grid-slot')) {
+                    const row = element.closest('.row');
+                    const isFirstRow = row && row.dataset.row === '0';
+                    
+                    if (!(currentMode === 'copy' && isFirstRow) && !element.hasChildNodes()) {
+                        if (canPlaceMultiletter(element, draggedLetter)) {
+                            placeMultiletter(element, draggedLetter);
+                        }
+                    }
+                }
+                
+                removeGhost();
+                document.querySelectorAll('.grid-slot').forEach(s => {
+                    s.classList.remove('drop-zone-active');
+                });
+            }
+            
+            touchStartPos = null;
+            isDragging = false;
+            draggedLetter = null;
+            draggedFromSlot = null;
+        });
         
         kachel.addEventListener('click', (e) => {
+            if (isDragging) return;
+            
             if (clickModeEnabled && selectedSlot) {
                 if (canPlaceMultiletter(selectedSlot, letters)) {
                     placeMultiletter(selectedSlot, letters);
                 }
                 clearSelectedSlot();
-            } else if (!draggedLetter) {
+            } else {
                 playSound(letters);
             }
         });
@@ -325,19 +448,78 @@ function placeLetter(gridSlot, letter) {
     slot.dataset.letter = letter;
     
     slot.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+        touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        isDragging = false;
         draggedLetter = letter;
         draggedFromSlot = gridSlot;
-        const touch = e.touches[0];
-        createGhost(touch.clientX, touch.clientY, letter);
-    }, { passive: false });
+    }, { passive: true });
     
-    slot.addEventListener('touchmove', handleTouchMove, { passive: false });
-    slot.addEventListener('touchend', handleTouchEnd);
+    slot.addEventListener('touchmove', (e) => {
+        if (!touchStartPos) return;
+        
+        const touch = e.touches[0];
+        const dx = touch.clientX - touchStartPos.x;
+        const dy = touch.clientY - touchStartPos.y;
+        
+        if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+            if (!isDragging) {
+                isDragging = true;
+                createGhost(touch.clientX, touch.clientY, letter);
+            } else {
+                moveGhost(touch.clientX, touch.clientY);
+            }
+            
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (element && element.classList.contains('grid-slot')) {
+                element.classList.add('drop-zone-active');
+            }
+            
+            document.querySelectorAll('.grid-slot').forEach(s => {
+                if (s !== element) {
+                    s.classList.remove('drop-zone-active');
+                }
+            });
+        }
+    }, { passive: true });
+    
+    slot.addEventListener('touchend', (e) => {
+        if (isDragging) {
+            const touch = e.changedTouches[0];
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            
+            if (draggedFromSlot && (!element || !element.classList.contains('grid-slot'))) {
+                draggedFromSlot.innerHTML = '';
+                updateWordGroups();
+                checkWord();
+            } else if (element && element.classList.contains('grid-slot')) {
+                const row = element.closest('.row');
+                const isFirstRow = row && row.dataset.row === '0';
+                
+                if (!(currentMode === 'copy' && isFirstRow) && !element.hasChildNodes()) {
+                    placeLetter(element, draggedLetter);
+                    if (draggedFromSlot) {
+                        draggedFromSlot.innerHTML = '';
+                        updateWordGroups();
+                        checkWord();
+                    }
+                }
+            }
+            
+            removeGhost();
+            document.querySelectorAll('.grid-slot').forEach(s => {
+                s.classList.remove('drop-zone-active');
+            });
+        }
+        
+        touchStartPos = null;
+        isDragging = false;
+        draggedLetter = null;
+        draggedFromSlot = null;
+    });
     
     slot.addEventListener('click', (e) => {
-        e.stopPropagation();
+        if (isDragging) return;
+        
         if (clickModeEnabled && selectedSlot) {
             handleLetterClick(letter, gridSlot);
         } else {
