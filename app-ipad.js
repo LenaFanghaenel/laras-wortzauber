@@ -524,7 +524,7 @@ function placeLetter(gridSlot, letter) {
             handleLetterClick(letter, gridSlot);
         } else {
             const word = getWordAtSlot(gridSlot);
-            const wordSlots = getWordSlots(gridSlot);
+            const wordSlots = getWordSlots(slot);
             highlightWordSlots(wordSlots, true);
             playSound(word.length > 1 ? word : letter);
             setTimeout(() => highlightWordSlots(wordSlots, false), 500);
@@ -596,7 +596,10 @@ function getWordAtSlot(gridSlot) {
     return word;
 }
 
-function getWordSlots(gridSlot) {
+function getWordSlots(slotElement) {
+    const gridSlot = slotElement.closest('.grid-slot');
+    if (!gridSlot) return [slotElement.parentElement];
+    
     const row = gridSlot.closest('.row');
     const slots = Array.from(row.querySelectorAll('.grid-slot'));
     const slotIndex = slots.indexOf(gridSlot);
