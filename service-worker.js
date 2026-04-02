@@ -1,9 +1,9 @@
-const CACHE_NAME = 'laras-wortzauber-v1';
+const CACHE_NAME = 'laras-wortzauber-v2';
 const ASSETS = [
     '/',
     '/index.html',
     '/styles.css',
-    '/app.js',
+    '/app-ipad.js',
     '/manifest.json',
     '/Zauberstab.png',
     '/Buch.png',
