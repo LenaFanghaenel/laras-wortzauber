@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Laras Wortzauber - Lern-App für Kinder</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#5f27cd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Laras Wortzauber">
+    
+    <!-- Icons für iOS -->
+    <link rel="apple-touch-icon" href="icon_192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon_192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icon_512.png">
+    
+    <!-- Standard Favicon -->
+    <link rel="icon" type="image/png" href="icon_192.png">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="background"></canvas>
+    <div id="stars"></div>
+    
+    <div class="app-container">
+        <div class="header-container">
+            <img src="Zauberstab.png" class="header-image left-image" alt="Zauberstab">
+            <div class="header-content">
+                <h1 class="title">Laras Wortzauber</h1>
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="free" onclick="setMode('free')">Freies Schreiben</button>
+                    <button class="mode-btn" data-mode="copy" onclick="setMode('copy')">Wörter Nachschreiben</button>
+                </div>
+            </div>
+            <img src="Buch.png" class="header-image right-image" alt="Buch">
+        </div>
+        
+        <div class="success-message" id="success-message">
+            <span class="success-icon">⭐</span>
+            Super gemacht!
+            <span class="success-icon">⭐</span>
+        </div>
+        
+        <div class="setzkasten" id="setzkasten">
+            <div class="row" data-row="0">
+                <div class="grid-slot" data-col="0"></div>
+                <div class="grid-slot" data-col="1"></div>
+                <div class="grid-slot" data-col="2"></div>
+                <div class="grid-slot" data-col="3"></div>
+                <div class="grid-slot" data-col="4"></div>
+                <div class="grid-slot" data-col="5"></div>
+                <div class="grid-slot" data-col="6"></div>
+                <div class="grid-slot" data-col="7"></div>
+                <div class="grid-slot" data-col="8"></div>
+                <div class="grid-slot" data-col="9"></div>
+            </div>
+            <div class="row" data-row="1">
+                <div class="grid-slot" data-col="0"></div>
+                <div class="grid-slot" data-col="1"></div>
+                <div class="grid-slot" data-col="2"></div>
+                <div class="grid-slot" data-col="3"></div>
+                <div class="grid-slot" data-col="4"></div>
+                <div class="grid-slot" data-col="5"></div>
+                <div class="grid-slot" data-col="6"></div>
+                <div class="grid-slot" data-col="7"></div>
+                <div class="grid-slot" data-col="8"></div>
+                <div class="grid-slot" data-col="9"></div>
+            </div>
+            <div class="row" data-row="2">
+                <div class="grid-slot" data-col="0"></div>
+                <div class="grid-slot" data-col="1"></div>
+                <div class="grid-slot" data-col="2"></div>
+                <div class="grid-slot" data-col="3"></div>
+                <div class="grid-slot" data-col="4"></div>
+                <div class="grid-slot" data-col="5"></div>
+                <div class="grid-slot" data-col="6"></div>
+                <div class="grid-slot" data-col="7"></div>
+                <div class="grid-slot" data-col="8"></div>
+                <div class="grid-slot" data-col="9"></div>
+            </div>
+        </div>
+        
+        <div class="kacheln-container">
+            <div class="kacheln" id="kacheln"></div>
+            <div class="kacheln multiletter-row" id="multiletter-row">
+                <div class="keyboard-row">
+                    <div class="kachel consonant multiletter" data-letters="SCH">SCH</div>
+                    <div class="kachel consonant multiletter" data-letters="CH">CH</div>
+                    <div class="kachel vowel multiletter" data-letters="EI">EI</div>
+                    <div class="kachel vowel multiletter" data-letters="AU">AU</div>
+                    <div class="kachel vowel multiletter" data-letters="EU">EU</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-controls">
+            <button class="reset-btn" onclick="resetSetzkasten()">Zurücksetzen</button>
+            <div class="right-controls">
+                <button class="toggle-multiletter-btn" id="toggle-multiletter-btn" onclick="toggleMultiletterRow()">
+                    <span class="toggle-icon">🔤</span>
+                    Mehrfachlaute
+                </button>
+                <button class="click-toggle-btn" id="click-toggle-btn" onclick="toggleClickMode()">
+                    <span class="toggle-icon">👆</span>
+                    Klicken & Platzieren
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Service Worker registrieren
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registriert:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker Registrierung fehlgeschlagen:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
