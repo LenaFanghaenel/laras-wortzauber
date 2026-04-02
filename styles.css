@@ -87,7 +87,6 @@ body {
     object-fit: contain;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.6;
     position: absolute;
 }
 
