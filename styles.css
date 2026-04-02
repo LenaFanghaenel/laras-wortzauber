@@ -93,12 +93,12 @@ body {
 
 .left-image {
     max-height: 20vh;
-    right: calc(50% + 12vh);
+    right: calc(50% + 24vh);
 }
 
 .right-image {
     max-height: 17vh;
-    left: calc(50% + 12vh);
+    left: calc(50% + 24vh);
 }
 
 .title {
