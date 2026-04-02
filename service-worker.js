@@ -1,4 +1,4 @@
-const CACHE_NAME = 'laras-wortzauber-v3';
+const CACHE_NAME = 'laras-wortzauber-v4';
 const ASSETS = [
     '/',
     '/index.html',
@@ -37,24 +37,43 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                if (response) {
+    if (event.request.url.includes('styles.css') || 
+        event.request.url.includes('app-ipad.js') ||
+        event.request.url.includes('index.html')) {
+        event.respondWith(
+            fetch(event.request)
+                .then((response) => {
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME)
+                        .then((cache) => {
+                            cache.put(event.request, responseToCache);
+                        });
                     return response;
-                }
-                return fetch(event.request)
-                    .then((response) => {
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
-                        }
-                        const responseToCache = response.clone();
-                        caches.open(CACHE_NAME)
-                            .then((cache) => {
-                                cache.put(event.request, responseToCache);
-                            });
+                })
+                .catch(() => {
+                    return caches.match(event.request);
+                })
+        );
+    } else {
+        event.respondWith(
+            caches.match(event.request)
+                .then((response) => {
+                    if (response) {
                         return response;
-                    });
-            })
-    );
+                    }
+                    return fetch(event.request)
+                        .then((response) => {
+                            if (!response || response.status !== 200 || response.type !== 'basic') {
+                                return response;
+                            }
+                            const responseToCache = response.clone();
+                            caches.open(CACHE_NAME)
+                                .then((cache) => {
+                                    cache.put(event.request, responseToCache);
+                                });
+                            return response;
+                        });
+                })
+        );
+    }
 });
