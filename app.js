@@ -117,6 +117,7 @@ function initKacheln() {
             kachel.textContent = letter;
             kachel.dataset.letter = letter;
             
+            // Mouse events
             kachel.addEventListener('mousedown', (e) => {
                 e.preventDefault();
                 draggedLetter = letter;
@@ -124,6 +125,16 @@ function initKacheln() {
                 isDragging = true;
                 createGhost(e.clientX, e.clientY, letter);
             });
+            
+            // Touch events for iPad
+            kachel.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                draggedLetter = letter;
+                draggedFromSlot = null;
+                isDragging = true;
+                createGhost(touch.clientX, touch.clientY, letter);
+            }, { passive: false });
             
             kachel.addEventListener('click', (e) => {
                 if (clickModeEnabled) {
@@ -143,6 +154,7 @@ function initKacheln() {
 function initGlobalEvents() {
     const kachelnContainer = document.getElementById('kacheln');
     
+    // Mouse events
     document.addEventListener('mousemove', (e) => {
         if (isDragging) {
             moveGhost(e.clientX, e.clientY);
@@ -159,12 +171,54 @@ function initGlobalEvents() {
         }
     });
     
+    // Touch events for iPad
+    document.addEventListener('touchmove', (e) => {
+        if (isDragging) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            moveGhost(touch.clientX, touch.clientY);
+            
+            if (draggedFromSlot) {
+                const kachelnRect = kachelnContainer.getBoundingClientRect();
+                if (touch.clientX >= kachelnRect.left && touch.clientX <= kachelnRect.right &&
+                    touch.clientY >= kachelnRect.top && touch.clientY <= kachelnRect.bottom) {
+                    kachelnContainer.classList.add('drop-zone-active');
+                } else {
+                    kachelnContainer.classList.remove('drop-zone-active');
+                }
+            }
+        }
+    }, { passive: false });
+    
     document.addEventListener('mouseup', (e) => {
         if (isDragging) {
             if (draggedFromSlot && draggedLetter) {
                 const kachelnRect = kachelnContainer.getBoundingClientRect();
                 if (e.clientX >= kachelnRect.left && e.clientX <= kachelnRect.right &&
                     e.clientY >= kachelnRect.top && e.clientY <= kachelnRect.bottom) {
+                    draggedFromSlot.innerHTML = '';
+                    updateWordGroups();
+                }
+            }
+        }
+        
+        draggedLetter = null;
+        draggedFromSlot = null;
+        isDragging = false;
+        removeGhost();
+        document.querySelectorAll('.grid-slot').forEach(slot => {
+            slot.classList.remove('drop-zone-active');
+        });
+        kachelnContainer.classList.remove('drop-zone-active');
+    });
+    
+    document.addEventListener('touchend', (e) => {
+        if (isDragging) {
+            if (draggedFromSlot && draggedLetter) {
+                const kachelnRect = kachelnContainer.getBoundingClientRect();
+                const touch = e.changedTouches[0];
+                if (touch.clientX >= kachelnRect.left && touch.clientX <= kachelnRect.right &&
+                    touch.clientY >= kachelnRect.top && touch.clientY <= kachelnRect.bottom) {
                     draggedFromSlot.innerHTML = '';
                     updateWordGroups();
                 }
@@ -208,7 +262,31 @@ function removeGhost() {
 
 function initGridSlots() {
     document.querySelectorAll('.setzkasten .grid-slot').forEach(slot => {
+        // Mouse events
         slot.addEventListener('mouseup', (e) => {
+            const row = slot.closest('.row');
+            const isFirstRow = row && row.dataset.row === '0';
+            
+            if (currentMode === 'copy' && isFirstRow) return;
+            
+            if (isDragging && draggedLetter && !slot.hasChildNodes()) {
+                if (draggedLetter.length > 1) {
+                    if (canPlaceMultiletter(slot, draggedLetter)) {
+                        placeMultiletter(slot, draggedLetter);
+                    }
+                } else {
+                    placeLetter(slot, draggedLetter);
+                    if (draggedFromSlot) {
+                        draggedFromSlot.innerHTML = '';
+                        updateWordGroups();
+                        checkWord();
+                    }
+                }
+            }
+        });
+        
+        // Touch events for iPad
+        slot.addEventListener('touchend', (e) => {
             const row = slot.closest('.row');
             const isFirstRow = row && row.dataset.row === '0';
             
@@ -236,6 +314,7 @@ function initGridSlots() {
             }
         });
         
+        // Mouse hover
         slot.addEventListener('mouseenter', (e) => {
             const row = slot.closest('.row');
             const isFirstRow = row && row.dataset.row === '0';
@@ -468,8 +547,9 @@ function playSound(letter) {
         
         const utterance = new SpeechSynthesisUtterance(letter);
         utterance.lang = 'de-DE';
-        utterance.rate = 0.8;
-        utterance.pitch = 1.2;
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
         
         window.speechSynthesis.speak(utterance);
     }
@@ -552,6 +632,7 @@ function initMultiletterKacheln() {
     multiletterKacheln.forEach(kachel => {
         const letters = kachel.dataset.letters;
         
+        // Mouse events
         kachel.addEventListener('mousedown', (e) => {
             e.preventDefault();
             draggedLetter = letters;
@@ -560,6 +641,16 @@ function initMultiletterKacheln() {
             createGhostForMultiletter(e.clientX, e.clientY, letters);
         });
         
+        // Touch events for iPad
+        kachel.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            draggedLetter = letters;
+            draggedFromSlot = null;
+            isDragging = true;
+            createGhostForMultiletter(touch.clientX, touch.clientY, letters);
+        }, { passive: false });
+        
         kachel.addEventListener('click', (e) => {
             if (clickModeEnabled && selectedSlot) {
                 if (canPlaceMultiletter(selectedSlot, letters)) {
@@ -567,6 +658,11 @@ function initMultiletterKacheln() {
                 }
                 clearSelectedSlot();
             } else if (!isDragging) {
+                playSound(letters.toLowerCase());
+            }
+        });
+    });
+}
                 playSound(letters.toLowerCase());
             }
         });
