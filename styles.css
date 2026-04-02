@@ -184,7 +184,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    background: linear-gradient(135deg, #feca57, #ff9f43);
+    background: linear-gradient(135deg, #54a0ff, #5f27cd);
     color: white;
     padding: 3vh 4vh;
     border-radius: 3vh;

@@ -184,8 +184,6 @@ function initKacheln() {
                 
                 if (clickModeEnabled && selectedSlot) {
                     handleLetterClick(letter, null);
-                } else {
-                    playSound(letter);
                 }
             });
             
@@ -356,8 +354,6 @@ function handleKachelClick(e) {
     
     if (clickModeEnabled && selectedSlot) {
         handleLetterClick(letter, null);
-    } else {
-        playSound(letter);
     }
 }
 
@@ -545,7 +541,6 @@ function placeLetter(gridSlot, letter) {
     gridSlot.classList.remove('drop-zone-active');
     
     updateWordGroups();
-    playSound(letter);
     checkWord();
 }
 
