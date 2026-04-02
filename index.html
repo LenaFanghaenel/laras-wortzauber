@@ -20,7 +20,7 @@
     <!-- Standard Favicon -->
     <link rel="icon" type="image/png" href="icon_192.png">
     
-    <link rel="stylesheet" href="styles.css?v=7">
+    <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
     <canvas id="background"></canvas>
@@ -47,7 +47,6 @@
         
         <div class="main-content">
             <div class="setzkasten-wrapper">
-                <button class="icon-btn reset-btn" onclick="resetSetzkasten()" title="Zurücksetzen">🔄</button>
                 <div class="setzkasten" id="setzkasten">
                     <div class="row" data-row="0">
                         <div class="grid-slot" data-col="0"></div>
@@ -86,14 +85,11 @@
                         <div class="grid-slot" data-col="9"></div>
                     </div>
                 </div>
+                <button class="icon-btn reset-btn" onclick="resetSetzkasten()" title="Zurücksetzen">🔄</button>
             </div>
         </div>
         
         <div class="keyboard-wrapper">
-            <div class="keyboard-side-btns">
-                <button class="icon-btn toggle-multiletter-btn" id="toggle-multiletter-btn" onclick="toggleMultiletterRow()" title="Mehrfachlaute">🔤</button>
-                <button class="icon-btn click-toggle-btn" id="click-toggle-btn" onclick="toggleClickMode()" title="Klicken & Platzieren">👆</button>
-            </div>
             <div class="kacheln-container">
                 <div class="kacheln" id="kacheln"></div>
                 <div class="kacheln multiletter-row" id="multiletter-row">
@@ -105,6 +101,10 @@
                         <div class="kachel vowel multiletter" data-letters="EU">EU</div>
                     </div>
                 </div>
+            </div>
+            <div class="keyboard-side-btns">
+                <button class="icon-btn toggle-multiletter-btn" id="toggle-multiletter-btn" onclick="toggleMultiletterRow()" title="Mehrfachlaute">🔤</button>
+                <button class="icon-btn click-toggle-btn" id="click-toggle-btn" onclick="toggleClickMode()" title="Klicken & Platzieren">👆</button>
             </div>
         </div>
     </div>
