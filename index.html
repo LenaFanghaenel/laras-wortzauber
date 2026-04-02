@@ -20,7 +20,7 @@
     <!-- Standard Favicon -->
     <link rel="icon" type="image/png" href="icon_192.png">
     
-    <link rel="stylesheet" href="styles.css?v=10">
+    <link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body>
     <canvas id="background"></canvas>
@@ -28,15 +28,17 @@
     
     <div class="app-container">
         <div class="header-container">
-            <img src="Zauberstab.png" class="header-image left-image" alt="Zauberstab">
             <div class="header-content">
-                <h1 class="title">Laras Wortzauber</h1>
+                <div class="title-row">
+                    <img src="Zauberstab.png" class="header-image left-image" alt="Zauberstab">
+                    <h1 class="title">Laras Wortzauber</h1>
+                    <img src="Buch.png" class="header-image right-image" alt="Buch">
+                </div>
                 <div class="mode-selector">
                     <button class="mode-btn active" data-mode="free" onclick="setMode('free')">Freies Schreiben</button>
                     <button class="mode-btn" data-mode="copy" onclick="setMode('copy')">Wörter Nachschreiben</button>
                 </div>
             </div>
-            <img src="Buch.png" class="header-image right-image" alt="Buch">
         </div>
         
         <div class="success-message" id="success-message">
