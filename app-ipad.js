@@ -1,6 +1,6 @@
 const vowels = ['A', 'E', 'I', 'O', 'U', 'Ä', 'Ö', 'Ü'];
 const consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z'];
-const wordList = ['MAMA', 'PAPA', 'HAUS', 'BALL', 'BAUM', 'FISCH', 'HUND', 'KATZE', 'VOGEL', 'SONNE', 'MOND', 'STERN', 'WASSER', 'BLUME', 'BUCH'];
+const wordList = ['ADLER', 'AFFE', 'AMEISE', 'APFEL', 'AUTO', 'BACH', 'BACKEN', 'BAD', 'BADEN', 'BALL', 'BANANE', 'BANK', 'BAUEN', 'BAUM', 'BECHER', 'BERG', 'BESEN', 'BETT', 'BIENE', 'BILD', 'BIRNE', 'BLATT', 'BLAU', 'BLOCK', 'BLUME', 'BLUT', 'BOHNE', 'BOOT', 'BRAV', 'BREI', 'BRETT', 'BRIEF', 'BRILLE', 'BROT', 'BRÜCKE', 'BUCH', 'BURG', 'BUSCH', 'CLOWN', 'DACH', 'DACHS', 'DAUMEN', 'DECKEN', 'DICK', 'DINO', 'DOSE', 'DRACHE', 'DUMM', 'DUNKEL', 'DURST', 'EI', 'EIS', 'ENTE', 'ERDE', 'ESEL', 'ESSEN', 'EULE', 'FADEN', 'FAHREN', 'FALLEN', 'FAMILIE', 'FANGEN', 'FARBE', 'FAST', 'FEDER', 'FEIN', 'FELD', 'FENSTER', 'FERIEN', 'FERN', 'FEST', 'FILM', 'FINGER', 'FISCH', 'FLASCHE', 'FLEIßIG', 'FLIEGEN', 'FLOH', 'FLÖTE', 'FLUR', 'FLUSS', 'FOTO', 'FRAGE', 'FREI', 'FREUND', 'FROH', 'FUCHS', 'GABEL', 'GANZ', 'GARTEN', 'GEBEN', 'GEHEN', 'GELB', 'GELD', 'GEMÜSE', 'GERN', 'GESCHENK', 'GLAS', 'GLÜCK', 'GOLD', 'GRAS', 'GROSS', 'GRÜN', 'GUCKEN', 'GUT', 'HAARE', 'HABEN', 'HAHN', 'HALT', 'HAND', 'HART', 'HASE', 'HAUS', 'HEFT', 'HEISS', 'HELFEN', 'HELL', 'HEMD', 'HERD', 'HEXE', 'HIER', 'HILFE', 'HOCH', 'HOLEN', 'HONIG', 'HÖREN', 'HOSE', 'HUHN', 'HUND', 'HÜPFEN', 'HUT', 'IGEL', 'INSEL', 'JACKE', 'JAGEN', 'JUNGE', 'KÄFER', 'KALB', 'KALT', 'KAMM', 'KAROTTE', 'KÄSE', 'KAUEN', 'KEKS', 'KELLER', 'KERZE', 'KIND', 'KISTE', 'KITZ', 'KLEID', 'KLEIN', 'KOCHEN', 'KOHL', 'KOMMEN', 'KÖNIG', 'KOPF', 'KORB', 'KREIS', 'KROKODIL', 'KRONE', 'KÜCHE', 'KUCHEN', 'KÜKEN', 'KURZ', 'KUSS', 'LACHEN', 'LAMM', 'LAMPE', 'LANG', 'LAUT', 'LEER', 'LEISE', 'LESEN', 'LICHT', 'LIEB', 'LIED', 'LILA', 'LÖFFEL', 'LÖWE', 'LUFT', 'MACHEN', 'MÄDCHEN', 'MAIS', 'MALEN', 'MAMA', 'MANN', 'MANTEL', 'MASKE', 'MAUS', 'MEER', 'MEIN', 'MILCH', 'MOND', 'MÜCKE', 'MÜDE', 'MÜLL', 'MUSIK', 'MÜSLI', 'MÜTZE', 'NAME', 'NASE', 'NASS', 'NEIN', 'NETT', 'NETZ', 'NEU', 'NUDEL', 'NUSS', 'OBEN', 'OBST', 'OFEN', 'ONKEL', 'OMA', 'OPA', 'OTTER', 'PAKET', 'PAPA', 'PARK', 'PAUSE', 'PFERD', 'PILZ', 'PIRAT', 'PIZZA', 'PLATZ', 'PONY', 'PUPPE', 'PUNKT', 'QUALLE', 'QUARK', 'RAD', 'RADIO', 'RÄTSEL', 'RAUPE', 'RECHNEN', 'REGEN', 'REH', 'REIS', 'RIESE', 'RIND', 'RING', 'RITTER', 'ROCK', 'ROLLER', 'ROLLSCHUH', 'ROSA', 'ROSE', 'ROT', 'RUFEN', 'RUHE', 'RUND', 'SACK', 'SAFT', 'SAGEN', 'SALZ', 'SAND', 'SATT', 'SAUBER', 'SAUER', 'SCHAF', 'SCHAL', 'SCHARF', 'SCHATZ', 'SCHERE', 'SCHLAFEN', 'SCHLANGE', 'SCHLOSS', 'SCHMECKEN', 'SCHNECKE', 'SCHNEE', 'SCHNELL', 'SCHON', 'SCHÖN', 'SCHULE', 'SCHWAN', 'SCHWIMMEN', 'SEE', 'SEHEN', 'SEIFE', 'SEIL', 'SENF', 'SINGEN', 'SOFA', 'SONNE', 'SOSSE', 'SPASS', 'SPATZ', 'SPIEL', 'SPIELEN', 'SPINNE', 'SPORT', 'SPRINGEN', 'STADT', 'STAR', 'STARK', 'STEIN', 'STERN', 'STIFT', 'STOCK', 'STOPP', 'STRAND', 'STUHL', 'SUPPE', 'SÜSS', 'TANTE', 'TANZEN', 'TASCHE', 'TASSE', 'TEE', 'TEIG', 'TELLER', 'TEUER', 'TIGER', 'TISCH', 'TOAST', 'TOLL', 'TOPF', 'TOR', 'TORTE', 'TOT', 'TRAGEN', 'TRAUM', 'TRINKEN', 'TURM', 'UHR', 'UNTEN', 'VASE', 'VIEL', 'VOGEL', 'WALD', 'WAND', 'WARM', 'WASCHEN', 'WEG', 'WEIN', 'WEISS', 'WEIT', 'WELT', 'WENIG', 'WERFEN', 'WESPE', 'WIESE', 'WILD', 'WISSEN', 'WITZ', 'WOLF', 'WOLKE', 'WORT', 'WURM', 'ZAHL', 'ZAUBER', 'ZEBRA', 'ZEIT', 'ZELT', 'ZIEGE', 'ZIEL', 'ZIMMER', 'ZUG', 'ZUNGE', 'ZWEIG', 'LARA', 'NOAH'];
 
 let currentMode = 'free';
 let clickModeEnabled = false;
@@ -21,6 +21,7 @@ function init() {
     initKacheln();
     initMultiletterKacheln();
     initGridSlots();
+    initIconButtons();
 }
 
 function initBackground() {
@@ -271,8 +272,6 @@ function initMultiletterKacheln() {
                     placeMultiletter(selectedSlot, letters);
                 }
                 clearSelectedSlot();
-            } else {
-                playSound(letters);
             }
         });
     });
@@ -391,6 +390,30 @@ function initGridSlots() {
         slot.addEventListener('click', () => {
             if (!slot.hasChildNodes()) {
                 handleSlotClick(slot);
+            }
+        });
+    });
+}
+
+function initIconButtons() {
+    document.querySelectorAll('.icon-btn').forEach(btn => {
+        let touchStartTime = 0;
+        let touchStartPos = null;
+        
+        btn.addEventListener('touchstart', (e) => {
+            touchStartTime = Date.now();
+            touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }, { passive: true });
+        
+        btn.addEventListener('touchend', (e) => {
+            const touchDuration = Date.now() - touchStartTime;
+            const touch = e.changedTouches[0];
+            const dx = Math.abs(touch.clientX - touchStartPos.x);
+            const dy = Math.abs(touch.clientY - touchStartPos.y);
+            
+            if (touchDuration < 500 && dx < 20 && dy < 20) {
+                e.preventDefault();
+                btn.click();
             }
         });
     });
@@ -522,10 +545,9 @@ function placeLetter(gridSlot, letter) {
             handleLetterClick(letter, gridSlot);
         } else {
             const word = getWordAtSlot(gridSlot);
-            const wordSlots = getWordSlotsFromGridSlot(gridSlot);
-            highlightWordSlots(wordSlots, true);
+            highlightAllSlotsInWord(gridSlot, true);
             playSound(word.length > 1 ? word : letter);
-            setTimeout(() => highlightWordSlots(wordSlots, false), 500);
+            setTimeout(() => highlightAllSlotsInWord(gridSlot, false), 500);
         }
     });
     
@@ -665,6 +687,37 @@ function highlightWordSlots(slots, highlight) {
             }
         }
     });
+}
+
+function highlightAllSlotsInWord(gridSlot, highlight) {
+    const row = gridSlot.closest('.row');
+    if (!row) return;
+    
+    const allSlots = Array.from(row.querySelectorAll('.grid-slot'));
+    const slotIndex = allSlots.indexOf(gridSlot);
+    
+    if (slotIndex === -1) return;
+    
+    let startIdx = slotIndex;
+    while (startIdx > 0 && allSlots[startIdx - 1].querySelector('.slot')) {
+        startIdx--;
+    }
+    
+    let endIdx = slotIndex;
+    while (endIdx < allSlots.length - 1 && allSlots[endIdx + 1].querySelector('.slot')) {
+        endIdx++;
+    }
+    
+    for (let i = startIdx; i <= endIdx; i++) {
+        const slotEl = allSlots[i].querySelector('.slot');
+        if (slotEl) {
+            if (highlight) {
+                slotEl.classList.add('word-hover');
+            } else {
+                slotEl.classList.remove('word-hover');
+            }
+        }
+    }
 }
 
 function updateWordGroups() {
