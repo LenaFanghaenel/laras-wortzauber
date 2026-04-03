@@ -22,6 +22,16 @@ function init() {
     initMultiletterKacheln();
     initGridSlots();
     initIconButtons();
+    initSpeechSynthesis();
+}
+
+function initSpeechSynthesis() {
+    if ('speechSynthesis' in window) {
+        speechSynthesis.getVoices();
+        speechSynthesis.onvoiceschanged = () => {
+            speechSynthesis.getVoices();
+        };
+    }
 }
 
 function initBackground() {
@@ -798,33 +808,42 @@ function playSound(text) {
         utterance.rate = 1.0;
         utterance.pitch = 1.1;
         
-        const voices = speechSynthesis.getVoices();
-        const germanVoices = voices.filter(v => v.lang.startsWith('de'));
+        let voices = speechSynthesis.getVoices();
         
-        if (germanVoices.length > 0) {
-            const preferredVoice = germanVoices.find(v => 
-                v.name.includes('Anna') || 
-                v.name.includes('Markus') || 
-                v.name.includes('German') ||
-                v.name.includes('Deutsch')
-            );
-            if (preferredVoice) {
-                utterance.voice = preferredVoice;
-            } else {
-                utterance.voice = germanVoices[0];
+        if (voices.length === 0) {
+            speechSynthesis.onvoiceschanged = () => {
+                voices = speechSynthesis.getVoices();
+                const germanVoices = voices.filter(v => v.lang.startsWith('de'));
+                if (germanVoices.length > 0) {
+                    utterance.voice = germanVoices.find(v => 
+                        v.name.includes('Anna') || 
+                        v.name.includes('Markus') || 
+                        v.name.includes('German') ||
+                        v.name.includes('Deutsch')
+                    ) || germanVoices[0];
+                }
+                speechSynthesis.speak(utterance);
+            };
+        } else {
+            const germanVoices = voices.filter(v => v.lang.startsWith('de'));
+            
+            if (germanVoices.length > 0) {
+                const preferredVoice = germanVoices.find(v => 
+                    v.name.includes('Anna') || 
+                    v.name.includes('Markus') || 
+                    v.name.includes('German') ||
+                    v.name.includes('Deutsch')
+                );
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                } else {
+                    utterance.voice = germanVoices[0];
+                }
             }
+            
+            speechSynthesis.speak(utterance);
         }
-        
-        speechSynthesis.speak(utterance);
     }
-}
-
-if ('speechSynthesis' in window) {
-    speechSynthesis.onvoiceschanged = () => {
-        const voices = speechSynthesis.getVoices();
-        const germanVoices = voices.filter(v => v.lang.startsWith('de'));
-        console.log('Verfügbare deutsche Stimmen:', germanVoices.map(v => v.name));
-    };
 }
 
 function setMode(mode) {
@@ -958,7 +977,10 @@ function showSuccess() {
             slot.innerHTML = '';
             slot.classList.remove('word-start', 'word-middle', 'word-end');
         });
-        nextWord();
+        
+        if (collectedImages.length < 6) {
+            nextWord();
+        }
     };
     
     msg.onclick = closeMsg;
@@ -1057,6 +1079,12 @@ function showFireworks() {
             slot.innerHTML = '?';
             slot.classList.remove('filled');
         });
+        
+        document.querySelectorAll('.setzkasten .grid-slot').forEach(slot => {
+            slot.innerHTML = '';
+            slot.classList.remove('word-start', 'word-middle', 'word-end');
+        });
+        nextWord();
     };
 }
 
