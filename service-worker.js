@@ -1,4 +1,4 @@
-const CACHE_NAME = 'laras-wortzauber-v9';
+const CACHE_NAME = 'laras-wortzauber-v10';
 const ASSETS = [
     '/',
     '/index.html',
@@ -11,6 +11,9 @@ const ASSETS = [
     '/Mond.png',
     '/Stern.png',
     '/Flasche.png',
+    '/Baumstamm.png',
+    '/Schriftrolle.png',
+    '/Feder.png',
     '/icon_192.png',
     '/icon_512.png'
 ];

@@ -910,7 +910,7 @@ function checkWord() {
 function showSuccess() {
     playSound(currentWord);
     
-    const images = ['Buch.png', 'Eule.png', 'Mond.png', 'Stern.png', 'Flasche.png', 'Zauberstab.png'];
+    const images = ['Buch.png', 'Eule.png', 'Mond.png', 'Stern.png', 'Flasche.png', 'Zauberstab.png', 'Baumstamm.png', 'Schriftrolle.png', 'Feder.png'];
     
     let randomImage = images[Math.floor(Math.random() * images.length)];
     
@@ -1011,7 +1011,7 @@ function animateImageToCollection(imageSrc, callback) {
 
 function updateCollectionBar() {
     const slots = document.querySelectorAll('.collection-slot');
-    const images = ['Buch.png', 'Eule.png', 'Mond.png', 'Stern.png', 'Flasche.png', 'Zauberstab.png'];
+    const images = ['Buch.png', 'Eule.png', 'Mond.png', 'Stern.png', 'Flasche.png', 'Zauberstab.png', 'Baumstamm.png', 'Schriftrolle.png', 'Feder.png'];
     
     slots.forEach((slot, index) => {
         if (index < collectedImages.length) {
