@@ -15,6 +15,8 @@ let isDragging = false;
 let collectedImages = [];
 let successCountSinceLastNew = 0;
 
+let speechUnlocked = false;
+
 function init() {
     initBackground();
     initStars();
@@ -31,7 +33,19 @@ function initSpeechSynthesis() {
         speechSynthesis.onvoiceschanged = () => {
             speechSynthesis.getVoices();
         };
+        
+        document.addEventListener('click', unlockSpeech, { once: true });
+        document.addEventListener('touchstart', unlockSpeech, { once: true });
     }
+}
+
+function unlockSpeech() {
+    if (speechUnlocked) return;
+    speechUnlocked = true;
+    
+    const utterance = new SpeechSynthesisUtterance('');
+    utterance.volume = 0;
+    speechSynthesis.speak(utterance);
 }
 
 function initBackground() {
