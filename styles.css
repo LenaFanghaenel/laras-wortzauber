@@ -477,6 +477,19 @@ body {
     box-shadow: 0 1vh 3.2vh rgba(0, 0, 0, 0.2);
 }
 
+.icon-btn.hint-btn {
+    visibility: hidden;
+}
+
+.icon-btn.hint-btn.visible {
+    visibility: visible;
+}
+
+.kachel.dimmed {
+    opacity: 0.3;
+    transform: scale(0.9);
+}
+
 .kacheln-container {
     flex-shrink: 0;
 }

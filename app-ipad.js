@@ -5,6 +5,7 @@ const wordList = ['ADLER', 'AFFE', 'AMEISE', 'APFEL', 'AUTO', 'BACH', 'BACKEN', 
 let currentMode = 'free';
 let clickModeEnabled = false;
 let multiletterRowVisible = false;
+let hintModeEnabled = false;
 let currentWord = '';
 let draggedLetter = null;
 let draggedFromSlot = null;
@@ -875,15 +876,19 @@ function setMode(mode) {
     
     const firstRow = document.querySelector('.setzkasten .row[data-row="0"]');
     const collectionSlots = document.querySelector('.collection-slots');
+    const hintBtn = document.getElementById('hint-btn');
     
     if (mode === 'copy') {
         firstRow.classList.add('template-row');
         if (collectionSlots) collectionSlots.classList.add('visible');
+        if (hintBtn) hintBtn.classList.add('visible');
         nextWord();
     } else {
         firstRow.classList.remove('template-row');
         if (collectionSlots) collectionSlots.classList.remove('visible');
+        if (hintBtn) hintBtn.classList.remove('visible');
         currentWord = '';
+        clearKeyboardHint();
     }
 }
 
@@ -909,6 +914,10 @@ function nextWord() {
     }
     
     updateWordGroups();
+    
+    if (hintModeEnabled) {
+        applyKeyboardHint();
+    }
 }
 
 function checkWord() {
@@ -1082,6 +1091,16 @@ function showFireworks() {
     }
     
     const completionMsg = document.getElementById('completion-message');
+    completionMsg.innerHTML = '';
+    
+    collectedImages.forEach((imgSrc, index) => {
+        const img = document.createElement('img');
+        img.className = 'completion-img';
+        img.src = imgSrc;
+        img.style.animationDelay = (index * 0.1) + 's';
+        completionMsg.appendChild(img);
+    });
+    
     completionMsg.classList.add('show');
     
     completionMsg.onclick = () => {
@@ -1112,6 +1131,78 @@ function toggleMultiletterRow() {
     multiletterRowVisible = !multiletterRowVisible;
     document.getElementById('multiletter-row').classList.toggle('visible', multiletterRowVisible);
     document.getElementById('toggle-multiletter-btn').classList.toggle('active', multiletterRowVisible);
+}
+
+function toggleHintMode() {
+    hintModeEnabled = !hintModeEnabled;
+    document.getElementById('hint-btn').classList.toggle('active', hintModeEnabled);
+    
+    if (hintModeEnabled) {
+        applyKeyboardHint();
+    } else {
+        clearKeyboardHint();
+    }
+}
+
+function applyKeyboardHint() {
+    if (!currentWord) return;
+    
+    const wordLetters = currentWord.split('');
+    const kacheln = document.querySelectorAll('#kacheln .kachel');
+    
+    kacheln.forEach(kachel => {
+        const letter = kachel.dataset.letter;
+        if (!wordLetters.includes(letter)) {
+            kachel.classList.add('dimmed');
+        } else {
+            kachel.classList.remove('dimmed');
+        }
+    });
+    
+    const multiletterKacheln = document.querySelectorAll('.multiletter');
+    const multiletterPatterns = {
+        'SCH': ['S', 'C', 'H'],
+        'CH': ['C', 'H'],
+        'EI': ['E', 'I'],
+        'AU': ['A', 'U'],
+        'EU': ['E', 'U']
+    };
+    
+    multiletterKacheln.forEach(kachel => {
+        const letters = kachel.dataset.letters;
+        const pattern = multiletterPatterns[letters];
+        if (pattern) {
+            const hasPattern = checkPatternInWord(currentWord, pattern);
+            if (!hasPattern) {
+                kachel.classList.add('dimmed');
+            } else {
+                kachel.classList.remove('dimmed');
+            }
+        }
+    });
+}
+
+function checkPatternInWord(word, pattern) {
+    for (let i = 0; i <= word.length - pattern.length; i++) {
+        let match = true;
+        for (let j = 0; j < pattern.length; j++) {
+            if (word[i + j] !== pattern[j]) {
+                match = false;
+                break;
+            }
+        }
+        if (match) return true;
+    }
+    return false;
+}
+
+function clearKeyboardHint() {
+    document.querySelectorAll('#kacheln .kachel').forEach(kachel => {
+        kachel.classList.remove('dimmed');
+    });
+    document.querySelectorAll('.multiletter').forEach(kachel => {
+        kachel.classList.remove('dimmed');
+    });
 }
 
 function resetSetzkasten() {

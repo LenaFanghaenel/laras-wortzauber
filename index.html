@@ -20,7 +20,7 @@
     <!-- Standard Favicon -->
     <link rel="icon" type="image/png" href="icon_192.png">
     
-    <link rel="stylesheet" href="styles.css?v=43">
+    <link rel="stylesheet" href="styles.css?v=44">
 </head>
 <body>
     <canvas id="background"></canvas>
@@ -43,17 +43,7 @@
             <span class="success-text">Super gemacht!</span>
         </div>
         
-        <div class="completion-message" id="completion-message">
-            <img class="completion-img" src="Buch.png" alt="">
-            <img class="completion-img" src="Eule.png" alt="">
-            <img class="completion-img" src="Mond.png" alt="">
-            <img class="completion-img" src="Stern.png" alt="">
-            <img class="completion-img" src="Flasche.png" alt="">
-            <img class="completion-img" src="Zauberstab.png" alt="">
-            <img class="completion-img" src="Baumstamm.png" alt="">
-            <img class="completion-img" src="Schriftrolle.png" alt="">
-            <img class="completion-img" src="Feder.png" alt="">
-        </div>
+        <div class="completion-message" id="completion-message"></div>
         
         <div class="game-area">
             <div class="collection-slots">
@@ -124,13 +114,14 @@
                     <div class="keyboard-side-btns">
                         <button class="icon-btn toggle-multiletter-btn" id="toggle-multiletter-btn" onclick="toggleMultiletterRow()" title="Mehrfachlaute">🔤</button>
                         <button class="icon-btn click-toggle-btn" id="click-toggle-btn" onclick="toggleClickMode()" title="Klicken & Platzieren">👆</button>
+                        <button class="icon-btn hint-btn" id="hint-btn" onclick="toggleHintMode()" title="Hinweis">💡</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="app-ipad.js?v=25"></script>
+    <script src="app-ipad.js?v=28"></script>
     <script>
         // Service Worker registrieren
         if ('serviceWorker' in navigator) {
